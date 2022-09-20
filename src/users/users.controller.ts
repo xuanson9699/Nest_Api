@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiQuery,
@@ -23,11 +32,12 @@ export class UsersController {
 
   @ApiOkResponse({ type: User })
   @Get(':id')
-  getUserById(@Param('id') id: string): User {
-    return this.userService.findById(Number(id));
+  getUserById(@Param('id', ParseIntPipe) id: number): User {
+    return this.userService.findById(id);
   }
 
   @ApiCreatedResponse({ type: User })
+  @ApiBadRequestResponse()
   @Post()
   createUser(@Body() body: CreateUserDto): User {
     return this.userService.createUser(body);
